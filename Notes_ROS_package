@@ -1,0 +1,47 @@
+##Convert rosbag to PCD
+rosrun pcl_ros bag_to_pcd <input_file.bag> <topic> <output_directory>
+
+#
+rosbag play -r 0.5
+
+source ~/.bashrc
+mkdir -p ~/catkin_ws/src
+cd ~/catkin_ws/src
+catkin_create_pkg lcROS rospy roscpp geometry_msgs pcl_conversions pcl_ros sensor_msgs nav_msgs trajectory_msgs  actionlib_msgs diagnostic_msgs 
+cd ~/catkin_ws
+catkin_make
+source devel/setup.bash
+
+
+https://stevenliu216.github.io/2018/08/05/working-with-kitti-ros/
+
+
+
+cd ~/Desktop/LoopClosure/SRC/catkin_ws
+catkin_make
+rosrun lcROS subcribeVelo2PCD
+
+
+# PYTHON RUN
+change file to executable type
+chmod +x src/loopclosureros/SubVelo2Pcd.py
+src/loopclosureros/SubVelo2Pcd.py PointCloud:=/kitti/velo/pointcloud
+
+
+
+
+cd kafka_2.12-2.3.0
+#run zookeeper in the kafka_2.12-2.3.0
+bin/zookeeper-server-start.sh config/zookeeper.properties
+
+#run the kafka server. Always close kafka before zookeeper
+bin/kafka-server-start.sh config/server.properties
+
+# Run Spark
+$SPARK_HOME/bin/spark-submit --packages org.apache.spark:spark-streaming-kafka-0-8_2.11:2.0.0 /home/user/Desktop/LoopClosure/SRC/catkin_ws/src/lcROS/src/kafkaSpark.py localhost:2181 dist_stuff
+
+# Run MongoDB
+#start mongod server
+sudo service mongod start
+#check the status
+sudo service mongod status
